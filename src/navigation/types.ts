@@ -1,4 +1,5 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { StoreItemType } from "../utils/files/inventory";
 
 declare global {
   namespace ReactNavigation {
@@ -10,7 +11,7 @@ export type RootStackParamList = {
   LoginScreen: undefined;
   Inventory: undefined;
   AddNewItem: undefined;
-  EditItem: undefined;
+  EditItem: { item: StoreItemType };
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> =

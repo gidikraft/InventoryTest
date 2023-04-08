@@ -3,7 +3,7 @@ export const isValidDescription = (text: string, testLength: number) => {
     return false;
   }
   let splitText = text.trim().split(" ");
-  if (!(splitText.length >= testLength)) {
+  if (splitText.length < testLength) {
     return false;
   }
   return true;

@@ -1,13 +1,63 @@
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { Alert, StyleSheet, TouchableOpacity, View } from "react-native";
 import React, { useState } from "react";
 import CustomInput from "../components/TextInput";
 import { NormalText } from "../components/CustomText";
+import { RootStackScreenProps } from "../navigation/types";
+import { isValidText } from "../utils/validateText";
+import { isValidNumber } from "../utils/validateNumber";
+import { isValidDescription } from "../utils/validateDescription";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { StoreItemType } from "../utils/files/inventory";
+import { getUId } from "../utils/getUID";
 
-const EditItemScreen = () => {
+const EditItemScreen = ({
+  navigation,
+  route,
+}: RootStackScreenProps<"EditItem">) => {
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [units, setUnits] = useState("");
   const [description, setDescription] = useState("");
+
+  const itemToUpdate = route.params.item;
+
+  const updateItem = async (id: string) => {
+    if (isValidText(name) === false) {
+      Alert.alert("Error", "Please enter a valid nname");
+      return false;
+    } else if (isValidNumber(price) === false) {
+      Alert.alert("Error", "Please ennter a valid price");
+      return false;
+    } else if (isValidNumber(units) === false) {
+      Alert.alert("Error", "Please enter valid units");
+      return false;
+    } else if (isValidDescription(description, 3)) {
+      Alert.alert("Error", "Please description must be at least 3 words");
+      return false;
+    } else {
+      try {
+        const updatingdata = {
+          description,
+          price,
+          name,
+          units,
+        };
+        const myArray = await AsyncStorage.getItem("@MyStore:key");
+        let newData = JSON.parse(myArray as string);
+        let newArray = [...newData].map(item => {
+          if (id === item.id) {
+            const data = { ...item, ...updatingdata };
+            return data;
+          }
+          return item;
+        });
+        await AsyncStorage.setItem("@MyStore:key", JSON.stringify(newArray));
+				navigation.replace("Inventory");
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
 
   return (
     <View style={styles.maincontainer}>
@@ -17,8 +67,8 @@ const EditItemScreen = () => {
           style={styles.header}
         />
         <CustomInput
-          title="Username"
-          label="Enter username"
+          title="Name"
+          label="Enter name"
           value={name}
           onChangeText={text => setName(text)}
         />
@@ -46,7 +96,10 @@ const EditItemScreen = () => {
 
         <View style={{ alignItems: "center", flex: 1 }}>
           <View style={styles.bottomView}>
-            <TouchableOpacity style={styles.button} onPress={() => {}}>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => updateItem(itemToUpdate.id as string)}
+            >
               <NormalText caption="Update item" style={styles.buttonlabel} />
             </TouchableOpacity>
           </View>
@@ -88,5 +141,6 @@ const styles = StyleSheet.create({
   },
   buttonlabel: {
     color: "#ffffff",
+    fontSize: 12,
   },
 });

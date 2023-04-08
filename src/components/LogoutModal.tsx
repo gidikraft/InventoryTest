@@ -6,14 +6,14 @@ import BottomSheet, {
 } from "@gorhom/bottom-sheet";
 import { NormalText } from "./CustomText";
 
-type DeleteModalTypes = {
+type LogoutModalTypes = {
   deleteModalRef: RefObject<BottomSheet>;
   handleClose: () => void;
-  confirmDelete: () => void;
+  confirmLogout: () => void;
 };
 
-const ConfirmDeleteModal = (props: DeleteModalTypes) => {
-  const { deleteModalRef, handleClose, confirmDelete } = props;
+const LogoutModal = (props: LogoutModalTypes) => {
+  const { deleteModalRef, handleClose, confirmLogout } = props;
 
   const renderBackdrop = useCallback(
     (prop: BottomSheetBackdropProps) => (
@@ -28,6 +28,7 @@ const ConfirmDeleteModal = (props: DeleteModalTypes) => {
   );
 
   const snapPoints = useMemo(() => ["25%", "25%"], []);
+
   return (
     <BottomSheet
       ref={deleteModalRef}
@@ -36,13 +37,10 @@ const ConfirmDeleteModal = (props: DeleteModalTypes) => {
       backdropComponent={renderBackdrop}
     >
       <View style={styles.contentContainer}>
-        <NormalText
-          caption="Are you sure you want to delete this item"
-          style={styles.header}
-        />
+        <NormalText caption="You are about to log out" style={styles.header} />
         <View style={styles.buttoncontainer}>
-          <TouchableOpacity style={styles.deletebutton} onPress={confirmDelete}>
-            <NormalText caption="Delete" style={styles.deletebuttontext} />
+          <TouchableOpacity style={styles.deletebutton} onPress={confirmLogout}>
+            <NormalText caption="Log out" style={styles.deletebuttontext} />
           </TouchableOpacity>
           <TouchableOpacity style={styles.cancelbutton} onPress={handleClose}>
             <NormalText caption="Cancel" style={styles.cancelbuttontext} />
@@ -53,7 +51,7 @@ const ConfirmDeleteModal = (props: DeleteModalTypes) => {
   );
 };
 
-export default ConfirmDeleteModal;
+export default LogoutModal;
 
 const styles = StyleSheet.create({
   contentContainer: {

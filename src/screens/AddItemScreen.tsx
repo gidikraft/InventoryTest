@@ -7,6 +7,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { isValidText } from "../utils/validateText";
 import { isValidNumber } from "../utils/validateNumber";
 import { isValidDescription } from "../utils/validateDescription";
+import { getUId } from "../utils/getUID";
 
 const AddItemScreen = ({ navigation }: RootStackScreenProps<"AddNewItem">) => {
   const [name, setName] = useState("");
@@ -25,11 +26,12 @@ const AddItemScreen = ({ navigation }: RootStackScreenProps<"AddNewItem">) => {
       Alert.alert("Error", "Please enter valid units");
       return false;
     } else if (isValidDescription(description, 3)) {
-      Alert.alert("Error", "Please descriptionn must be at least 3 words");
+      Alert.alert("Error", "Please description must be at least 3 words");
       return false;
     } else {
       try {
         const myArray = await AsyncStorage.getItem("@MyStore:key");
+        let newData = JSON.parse(myArray as string);
 
         if (myArray !== null) {
           const data = {
@@ -37,8 +39,9 @@ const AddItemScreen = ({ navigation }: RootStackScreenProps<"AddNewItem">) => {
             price,
             name,
             units,
+            id: getUId(),
           };
-          let newData = [data, ...myArray];
+          newData.push(data);
 
           await AsyncStorage.setItem("@MyStore:key", JSON.stringify(newData));
           navigation.replace("Inventory");
@@ -130,5 +133,6 @@ const styles = StyleSheet.create({
   },
   buttonlabel: {
     color: "#ffffff",
+    fontSize: 12,
   },
 });

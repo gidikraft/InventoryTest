@@ -21,6 +21,7 @@ import NavButtons from "../components/NavButtons";
 import { RootStackScreenProps } from "../navigation/types";
 import BottomSheet from "@gorhom/bottom-sheet";
 import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
+import LogoutModal from "../components/LogoutModal";
 
 const InventoryScreen = ({ navigation }: RootStackScreenProps<"Inventory">) => {
   const { setisAuthenticated } = useContext(AppContext);
@@ -30,6 +31,7 @@ const InventoryScreen = ({ navigation }: RootStackScreenProps<"Inventory">) => {
   const [currentuser, setCurrentuser] = useState("");
   const [currentItemId, setCurrentItemId] = useState("");
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
+  const [userLoggedOut, setUserLoggedout] = useState(false);
 
   const getStoreDetails = async () => {
     try {
@@ -64,8 +66,11 @@ const InventoryScreen = ({ navigation }: RootStackScreenProps<"Inventory">) => {
   }, []);
 
   const logout = async () => {
-    await AsyncStorage.setItem("signedIn", "");
-    setisAuthenticated(false);
+    if (userLoggedOut) {
+      console.log(true);
+      await AsyncStorage.setItem("signedIn", "");
+      setisAuthenticated(false);
+    }
   };
 
   const deleteItem = async (id: string) => {
@@ -80,6 +85,7 @@ const InventoryScreen = ({ navigation }: RootStackScreenProps<"Inventory">) => {
   };
 
   const deleteModalRef = useRef<BottomSheet>(null);
+  const userLoggedOutRef = useRef<BottomSheet>(null);
 
   return (
     <SafeAreaView style={styles.maincontainer}>
@@ -105,7 +111,10 @@ const InventoryScreen = ({ navigation }: RootStackScreenProps<"Inventory">) => {
                   title="Add new item"
                   buttonPress={() => navigation.navigate("AddNewItem")}
                 />
-                <NavButtons title="Log out" buttonPress={logout} />
+                <NavButtons
+                  title="Log out"
+                  buttonPress={() => setUserLoggedout(true)}
+                />
               </View>
             </View>
           )}
@@ -121,7 +130,7 @@ const InventoryScreen = ({ navigation }: RootStackScreenProps<"Inventory">) => {
               price={item.price}
               units={item.units}
               description={item.description}
-              itemPress={() => navigation.navigate("EditItem")}
+              itemPress={() => navigation.navigate("EditItem", { item: item })}
               deleteItem={() => {
                 setCurrentItemId(item.id);
                 setDeleteModalVisible(true);
@@ -135,6 +144,13 @@ const InventoryScreen = ({ navigation }: RootStackScreenProps<"Inventory">) => {
           deleteModalRef={deleteModalRef}
           handleClose={() => setDeleteModalVisible(false)}
           confirmDelete={() => deleteItem(currentItemId)}
+        />
+      )}
+      {userLoggedOut && (
+        <LogoutModal
+          deleteModalRef={userLoggedOutRef}
+          handleClose={() => setUserLoggedout(false)}
+          confirmLogout={logout}
         />
       )}
     </SafeAreaView>
