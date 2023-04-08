@@ -5,54 +5,13 @@ import {
   View,
   TouchableOpacity,
   Alert,
-  GestureResponderEvent,
 } from "react-native";
 import React, { useContext, useState } from "react";
 import CustomInput from "../components/TextInput";
 import { AppContext } from "../global/AppContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NormalText } from "../components/CustomText";
-// import AppContext from '../global/AppContext';
-
-export interface StoreItemType {
-  id?: string;
-  name: string;
-  units: string;
-  price: string;
-  description: string;
-  itemPress?: (event: GestureResponderEvent) => void;
-}
-
-const myArray: StoreItemType[] = [
-  {
-    id: "11111a",
-    name: "Samsung",
-    units: "1",
-    price: "N2,000",
-    description: "64gb and 4gb RAM",
-  },
-  {
-    id: "11112b",
-    name: "Motorola",
-    units: "12",
-    price: "N2,000",
-    description: "64gb and 4gb RAM",
-  },
-  {
-    id: "11113c",
-    name: "OPPO",
-    units: "21",
-    price: "N2,000",
-    description: "64gb and 4gb RAM",
-  },
-  {
-    id: "1114d",
-    name: "Pixel",
-    units: "101",
-    price: "N2,000",
-    description: "64gb and 4gb RAM",
-  },
-];
+import { myArray } from "../utils/files/inventory";
 
 const Login = () => {
   const [username, setUsername] = useState("");

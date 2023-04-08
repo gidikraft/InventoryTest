@@ -5,8 +5,8 @@ import {
   KeyboardAvoidingView,
   Platform,
   TextInput,
-} from 'react-native';
-import React from 'react';
+} from "react-native";
+import React from "react";
 
 export type CustomInputProps = {
   label: string;
@@ -18,7 +18,7 @@ export type CustomInputProps = {
 };
 
 const CustomInput = (props: CustomInputProps) => {
-  const {label, disabled, value, title, onChangeText} = props;
+  const { label, disabled, value, title, onChangeText } = props;
   // const [isSecure, setIsSecure] = useState(true);
 
   return (
@@ -26,7 +26,7 @@ const CustomInput = (props: CustomInputProps) => {
       <Text style={styles.label}>{title}</Text>
 
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
         // style={{flex: 1}}
       >
         <TextInput
@@ -54,23 +54,23 @@ const styles = StyleSheet.create({
   label: {
     // fontFamily: 'Causten-Medium',
     marginBottom: 4,
-    fontSize: 14,
-    color: '#202223',
+    fontSize: 12,
+    color: "#202223",
   },
 
   inputContainer: {
-    backgroundColor: '#F7F7F7',
+    backgroundColor: "#F7F7F7",
     borderRadius: 8,
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   input: {
     // fontFamily: 'Causten-Regular',
     height: 45,
     fontSize: 14,
     padding: 12,
-    backgroundColor: '#F7F7F7',
-    color: '#202223',
+    backgroundColor: "#F7F7F7",
+    color: "#202223",
     borderRadius: 8,
   },
 });

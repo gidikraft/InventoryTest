@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { Inventory, Login } from "../screens";
+import { EditItem, Inventory, Login } from "../screens";
 import { RootStackParamList } from "./types";
 import { AppContext } from "../global/AppContext";
 import AddItemScreen from "../screens/AddItemScreen";
@@ -43,6 +43,11 @@ const RootNavigation = () => {
             name="AddNewItem"
             component={AddItemScreen}
             options={{ title: "Add New Item" }}
+          />
+          <Stack.Screen
+            name="EditItem"
+            component={EditItem}
+            options={{ title: "Update Item" }}
           />
         </>
       ) : (

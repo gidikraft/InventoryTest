@@ -32,20 +32,18 @@ const AddItemScreen = ({ navigation }: RootStackScreenProps<"AddNewItem">) => {
         const myArray = await AsyncStorage.getItem("@MyStore:key");
 
         if (myArray !== null) {
-          // We have data!!
-          let newData = myArray.slice();
           const data = {
             description,
             price,
             name,
             units,
           };
-
-          newData = [...data];
+          let newData = [data, ...myArray];
 
           await AsyncStorage.setItem("@MyStore:key", JSON.stringify(newData));
+          navigation.replace("Inventory");
 
-          console.log(JSON.parse(myArray));
+          console.log(newData, "updating stocks with");
         }
       } catch (error) {
         console.log("Error retrieving data", error);
@@ -61,8 +59,8 @@ const AddItemScreen = ({ navigation }: RootStackScreenProps<"AddNewItem">) => {
           style={styles.header}
         />
         <CustomInput
-          title="Username"
-          label="Enter username"
+          title="Name"
+          label="Enter name"
           value={name}
           onChangeText={text => setName(text)}
         />

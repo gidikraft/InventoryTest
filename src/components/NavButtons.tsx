@@ -1,17 +1,21 @@
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native";
 import React from "react";
 import { NormalText } from "./CustomText";
 
 type NavButtonTypes = {
   title: string;
   buttonPress: () => void;
+  buttonStyle?: ViewStyle;
 };
 
 const NavButtons = (props: NavButtonTypes) => {
-  const { title, buttonPress } = props;
+  const { title, buttonStyle, buttonPress } = props;
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={buttonPress} style={styles.addBtn}>
+      <TouchableOpacity
+        onPress={buttonPress}
+        style={[styles.addBtn, buttonStyle]}
+      >
         <NormalText caption={title} />
       </TouchableOpacity>
     </View>
@@ -25,7 +29,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderWidth: 1,
-    borderColor: "#ba2a20",
+    borderColor: "#bf3232",
     borderRadius: 4,
     paddingHorizontal: 10,
     paddingVertical: 5,

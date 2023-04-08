@@ -10,6 +10,7 @@ export type RootStackParamList = {
   LoginScreen: undefined;
   Inventory: undefined;
   AddNewItem: undefined;
+  EditItem: undefined;
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> =

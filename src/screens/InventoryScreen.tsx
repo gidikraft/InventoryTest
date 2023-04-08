@@ -6,13 +6,21 @@ import {
   StyleSheet,
   View,
 } from "react-native";
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { AppContext } from "../global/AppContext";
 import { NormalText } from "../components/CustomText";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import StoreItemCard from "../components/StoreItemCard";
 import NavButtons from "../components/NavButtons";
 import { RootStackScreenProps } from "../navigation/types";
+import BottomSheet from "@gorhom/bottom-sheet";
+import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
 
 const InventoryScreen = ({ navigation }: RootStackScreenProps<"Inventory">) => {
   const { setisAuthenticated } = useContext(AppContext);
@@ -20,6 +28,8 @@ const InventoryScreen = ({ navigation }: RootStackScreenProps<"Inventory">) => {
   const [salesItem, setSalesItem] = useState();
   const [isRefreshing, setRefreshing] = useState(false);
   const [currentuser, setCurrentuser] = useState("");
+  const [currentItemId, setCurrentItemId] = useState("");
+  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
 
   const getStoreDetails = async () => {
     try {
@@ -47,7 +57,7 @@ const InventoryScreen = ({ navigation }: RootStackScreenProps<"Inventory">) => {
   const pullToRefresh = useCallback(() => {
     setRefreshing(true);
     setTimeout(() => {
-      // getCourierBag();
+      getStoreDetails();
       setRefreshing(false);
     }, 1500);
     // console.log(confirmDss, 'show dss');
@@ -58,10 +68,18 @@ const InventoryScreen = ({ navigation }: RootStackScreenProps<"Inventory">) => {
     setisAuthenticated(false);
   };
 
-  const deleteItem = (id: string) => {
-    const newList = salesItem?.filter(item => item.id !== id);
-    setSalesItem(newList);
+  const deleteItem = async (id: string) => {
+    try {
+      const newList = salesItem?.filter(item => item.id !== id);
+      setSalesItem(newList);
+      await AsyncStorage.setItem("@MyStore:key", JSON.stringify(newList));
+      setDeleteModalVisible(false);
+    } catch (error) {
+      console.log("could not delete item", error);
+    }
   };
+
+  const deleteModalRef = useRef<BottomSheet>(null);
 
   return (
     <SafeAreaView style={styles.maincontainer}>
@@ -103,11 +121,22 @@ const InventoryScreen = ({ navigation }: RootStackScreenProps<"Inventory">) => {
               price={item.price}
               units={item.units}
               description={item.description}
-              itemPress={() => deleteItem(item.id)}
+              itemPress={() => navigation.navigate("EditItem")}
+              deleteItem={() => {
+                setCurrentItemId(item.id);
+                setDeleteModalVisible(true);
+              }}
             />
           )}
         />
       </View>
+      {deleteModalVisible && (
+        <ConfirmDeleteModal
+          deleteModalRef={deleteModalRef}
+          handleClose={() => setDeleteModalVisible(false)}
+          confirmDelete={() => deleteItem(currentItemId)}
+        />
+      )}
     </SafeAreaView>
   );
 };
