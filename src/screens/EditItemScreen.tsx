@@ -31,7 +31,7 @@ const EditItemScreen = ({
     } else if (isValidNumber(units) === false) {
       Alert.alert("Error", "Please enter valid units");
       return false;
-    } else if (isValidDescription(description, 3)) {
+    } else if (!isValidDescription(description, 3)) {
       Alert.alert("Error", "Please description must be at least 3 words");
       return false;
     } else {
@@ -52,7 +52,7 @@ const EditItemScreen = ({
           return item;
         });
         await AsyncStorage.setItem("@MyStore:key", JSON.stringify(newArray));
-				navigation.replace("Inventory");
+        navigation.replace("Inventory");
       } catch (error) {
         console.log(error);
       }
